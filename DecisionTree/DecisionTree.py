@@ -328,9 +328,9 @@ class DecisionTree:
             print("No tree, please use the fit method")
             return
 
-        self.pretty_print_rec(self.root, information_gain=information_gain)
+        self.pretty_print_rec(self.root)
 
-    def pretty_print_rec(self, node, information_gain=True, tiret="|---"):
+    def pretty_print_rec(self, node, tiret="|---"):
         """
         Pretty print the subtree
 
