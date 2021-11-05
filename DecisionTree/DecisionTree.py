@@ -41,7 +41,6 @@ class DecisionTree:
         Returns:
             inputs (array), labels (array)
         """
-
         return dataset[:, :len(self.x_col_names)], dataset[:, len(self.x_col_names):]
 
     def build_tree(self, dataset, depth=0):
@@ -101,7 +100,7 @@ class DecisionTree:
 
             if len(possible_thresholds) == 2:
                 binary_col = True
-                possible_thresholds = possible_thresholds[1:]
+                possible_thresholds = possible_thresholds[:1]
             else:
                 possible_thresholds = possible_thresholds[1:-1]
 
@@ -119,8 +118,6 @@ class DecisionTree:
                     split['column_index'] = i
                     split['operator'] = "=" if binary_col else "<="
 
-                #if binary_col:
-                #    break
         return split
 
     def split(self, dataset, threshold, column_index, binary_col):
@@ -331,9 +328,9 @@ class DecisionTree:
             print("No tree, please use the fit method")
             return
 
-        self.pretty_print_rec(self.root, information_gain=information_gain)
+        self.pretty_print_rec(self.root)
 
-    def pretty_print_rec(self, node, information_gain=True, tiret="|---"):
+    def pretty_print_rec(self, node, tiret="|---"):
         """
         Pretty print the subtree
 
