@@ -8,8 +8,8 @@ from sklearn.model_selection import train_test_split
 
 #Load data
 data_path = "data/clean_data.csv"
-accuracies_file_path = "tests/tests_pkl/logistic_regression/LogisticRegression_accuracies.pkl"
-actual_accuracies_file_path = "current_accuracies/logistic_regression/LogisticRegression_accuracies.pkl"
+accuracies_file_path  = "current_accuracies/logistic_regression/LogisticRegression_accuracies.pkl"
+actual_accuracies_file_path= "best_weights/LogisticRegression_accuracies.pkl"
 
 data = np.loadtxt(data_path, delimiter=",",dtype=float, skiprows=1)
 col_names = np.genfromtxt(data_path , delimiter=',', names=True, dtype=float).dtype.names[1:31]
@@ -41,22 +41,17 @@ class TestLogisticRegressionClass:
         keys = list(actual_values)
 
         lower_accuracies = []
-        no_lower = True
-        upper = False
+        no_upper = True
 
         print(actual_values, new_values)
         for key in keys:
-            is_upper = actual_values[key] <= new_values[key]
-            comparaison = actual_values[key] < new_values[key]
+            is_lower = actual_values[key] >= new_values[key]
 
-            if not is_upper:
-                no_lower = False
-            if not comparaison:
-                upper = True
+            if not is_lower:
+                no_upper = False
 
-            comparaison_str = str(actual_values[key]) + " <= " + str(new_values[key])
-            lower_accuracies.append(key + " : " + str(is_upper) + ' ' + comparaison_str)
+            comparaison_str = str(actual_values[key]) + " >= " + str(new_values[key])
+            lower_accuracies.append(key + " : " + str(is_lower) + ' ' + comparaison_str)
 
-        assert no_lower, "key comparaison (actual vs new):\n{}".format("\n".join(lower_accuracies))
-        assert upper, "Better accuracy please save weights and save accuracies before the commit.\nkey comparaison (actual vs new):\n{}".format("\n".join(lower_accuracies))
+        assert no_upper, "One or more accuracy is lower than the previous one. Key comparaison (actual vs new):\n{}".format("\n".join(lower_accuracies))
 
