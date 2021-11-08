@@ -2,6 +2,7 @@ import pickle
 import pandas as pd
 import subprocess
 import os
+from statistics import mean
 
 from LogisticRegression import *
 
@@ -27,6 +28,8 @@ for i, column in enumerate(df.iloc[:, 23: 31].columns) :
 
 accuracies = prediction_analyse_labels(df.iloc[:, 23: 31].columns, trainers, df.iloc[:, 23: 31].columns, data_path, split_proportions, display_confusion=False)
 
+accuracies['mean'] = mean(accuracies.values())
+
 save_accuracies_pkl(accuracies_file_path, accuracies)
 
 
@@ -46,6 +49,8 @@ for i, column in enumerate(df.iloc[:, 23: 31].columns) :
     trainers.append(trainer)
 
 accuracies = prediction_analyse_labels(df.iloc[:, 23: 31].columns, trainers, df.iloc[:, 23: 31].columns, data_path, split_proportions, display_confusion=False)
+
+accuracies['mean'] = mean(accuracies.values())
 
 save_accuracies_pkl(accuracies_file_path, accuracies)
 
