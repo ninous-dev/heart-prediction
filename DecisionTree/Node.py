@@ -19,7 +19,7 @@ class Node:
             column_index (int) : Index of the decision column in the original data.
             operator (str) : '=' if the decision is made on a binary value else '<='
 
-            value (int) : The most represented class by this node.
+            value (float) : The most represented class by this node.
         """
 
 

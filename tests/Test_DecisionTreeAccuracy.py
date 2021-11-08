@@ -10,8 +10,8 @@ from DecisionTree import DecisionTree
 
 #Load data
 data_path = "data/clean_data.csv"
-accuracies_file_path = "tests/tests_pkl/decision_tree/decisionTree_accuracies.pkl"
-actual_accuracies_file_path = "current_accuracies/decision_tree/decisionTree_accuracies.pkl"
+actual_accuracies_file_path = "best_weights/decisionTree_accuracies.pkl"
+accuracies_file_path = "current_accuracies/decision_tree/decisionTree_accuracies.pkl"
 data = np.loadtxt(data_path, delimiter=",",dtype=float, skiprows=1)
 col_names = np.genfromtxt(data_path , delimiter=',', names=True, dtype=float).dtype.names[1:31]
 
@@ -29,6 +29,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=.4, random_s
 DEPTH = 5
 
 class TestDecisionTreeClass:
+    """
     def test_compute_accuracies(self):
         total_accuracy = 0
         accuracies = {}
@@ -47,6 +48,7 @@ class TestDecisionTreeClass:
         accuracies_file.close()
 
         assert os.path.isfile(accuracies_file_path) == True
+    """
 
     def test_compare_accuracies(self):
         accuracies_file = open(accuracies_file_path, "rb")
@@ -60,15 +62,15 @@ class TestDecisionTreeClass:
         keys = list(actual_values)
 
         lower_accuracies = []
-        no_lower = True
+        no_upper = True
 
         for key in keys:
-            is_upper = actual_values[key] <= new_values[key]
+            is_lower = actual_values[key] >= new_values[key]
 
-            if not is_upper:
-                no_lower = False
+            if not is_lower:
+                no_upper = False
 
             comparaison_str = str(actual_values[key]) + " <= " + str(new_values[key])
-            lower_accuracies.append(key + " : " + str(is_upper) + ' ' + comparaison_str)
+            lower_accuracies.append(key + " : " + str(is_lower) + ' ' + comparaison_str)
 
-        assert no_lower, "key comparaison (actual vs new):\n{}".format("\n".join(lower_accuracies))
+        assert no_upper, "key comparaison (actual vs new):\n{}".format("\n".join(lower_accuracies))

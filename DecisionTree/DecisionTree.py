@@ -1,7 +1,10 @@
 from .Node import Node
 
 import numpy as np
+import os
 import seaborn as sns
+import ast
+import sys
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import accuracy_score, confusion_matrix
@@ -422,3 +425,66 @@ class DecisionTree:
             print(f'sensitivity : {sensitivity}, specificity : {specificity}, PPV : {PPV}, NPV : {NPV}')
 
         return accuracy
+
+    def save_tree(self, path):
+        tree_info = []
+        tree_info.append(self.x_col_names)
+        tree_info.append(self.min_participant)
+        tree_info.append(self.max_depth)
+
+        tree_info.append(self.__get_tree_str(self.root))
+
+        tree_str = str(tree_info)
+
+        f = open(path, "w")
+        f.write(tree_str)
+        f.close()
+
+    def __get_tree_str(self, node):
+        if node == None:
+            return []
+
+        if node.left == None and node.right == None:
+            return [str(node.value)]
+
+        node_info = []
+        node_info.append(str(node.information_gain))
+        node_info.append(str(node.threshold))
+        node_info.append(node.column_name)
+        node_info.append(str(node.column_index))
+        node_info.append(node.operator)
+
+        node_info.append(self.__get_tree_str(node.left))
+        node_info.append(self.__get_tree_str(node.right))
+
+        return node_info
+
+    def import_tree(self, path):
+        if not os.path.isfile(path):
+            print("File doesn't exist :", path, file=sys.stderr)
+            return
+
+        with open(path) as f:
+            tree_str = f.read()
+        tree_list = ast.literal_eval(tree_str)
+
+        self.x_col_names = tree_list[0]
+        self.min_participant = tree_list[1]
+        self.max_depth = tree_list[2]
+
+        tree_list = tree_list[3]
+
+        self.root = self.__build_tree_from_file(tree_list)
+
+
+    def __build_tree_from_file(self, tree_list):
+        if len(tree_list) == 0 :
+            return None
+
+        if len(tree_list) == 1:
+            return Node(value=float(tree_list[0]))
+
+        return Node(self.__build_tree_from_file(tree_list[5]),
+                    self.__build_tree_from_file(tree_list[6]),
+                    float(tree_list[0]), float(tree_list[1]),
+                    tree_list[2], int(tree_list[3]), tree_list[4])
