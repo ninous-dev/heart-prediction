@@ -75,6 +75,9 @@ def prediction_analyse(dataloader, trainer, display_confusion=True):
     NPV = TN / (TN + FN)
 
 
+    PPV = TP / (TP + FP) if (TP + FP) != 0 else 'no positives values'
+    NPV = TN / (TN + FN) if (TN + FN) != 0 else 'no negatives values'
+
     print(f'sensitivity : {sensitivity}, specificity : {specificity}, PPV : {PPV}, NPV : {NPV}')
     return accuracy
 
